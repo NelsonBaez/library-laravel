@@ -74,18 +74,21 @@ class BooksController extends Controller
         if (!empty($datas)) {
             foreach ($datas as $data) {
                 $x = 0;
-                $show = ''; $edit = ''; $delete = '';
+                $show = ''; $edit = '';
                 
-                // $show = "<button title='Visualizar' data-id='$data->id' class='btn btn-info btn-sm show-modal d-print-none'>
-                //     <i class='fas fa-search'></i></button>"; 
+                $show = "<a title='Visualizar' href='".route('books.show', $data->id)."' class='bg-blue-200 hover:bg-blue-400 border rounded w-2 h-2 p-2'>
+                    <i class='fas fa-search'></i></a>"; 
+
+                $edit = "<a title='Editar' href='".route('books.edit', $data->id)."' class='bg-yellow-200 hover:bg-yellow-400 border rounded w-2 h-2 p-2'>
+                    <i class='fas fa-edit'></i></a>"; 
 
                 $nestedData[$columns[$x++]] = $data->id;
                 $nestedData[$columns[$x++]] = $data->title;
                 $nestedData[$columns[$x++]] = $data->description;
                 $nestedData[$columns[$x++]] = $data->writer?->name;
                 $nestedData[$columns[$x++]] = $data->pages;
-                $nestedData[$columns[$x++]] = $data->created_at->format('Y-m-d H:i:s');
-                $nestedData[$columns[$x++]] = "$show $edit $delete";
+                $nestedData[$columns[$x++]] = $data->created_at->format('d-m-Y H:i:s');
+                $nestedData[$columns[$x++]] = "$show $edit";
                 $dataArray[] = $nestedData;
             }
         }
@@ -147,7 +150,7 @@ class BooksController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        return view('books.show', compact('book'));
     }
 
     /**
@@ -158,7 +161,7 @@ class BooksController extends Controller
      */
     public function edit(Book $book)
     {
-        //
+        return view('books/edit', compact('book'));
     }
 
     /**
@@ -170,7 +173,24 @@ class BooksController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        //
+        $validator = Validator::make($request->all(), [ // começa a validação de campos
+            'title' => 'required',
+            'description' => 'required',
+            'writer' => 'required',
+            'pages' => 'required',
+        ])->validate();
+        
+        $book->title = $request->title;
+        $book->description = $request->description;
+        $writer = Writer::firstOrCreate([
+            'name' => $request->writer
+        ]);
+        $book->writer_id = $writer->id;
+        $book->pages = $request->pages;
+        $book->user_id = Auth::user()->id;
+        $book->save();       
+        
+        return redirect("books"); 
     }
 
     /**
@@ -181,6 +201,7 @@ class BooksController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $book->delete();
+        return redirect("books");
     }
 }

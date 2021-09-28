@@ -22,6 +22,7 @@
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
             crossorigin="anonymous"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.11.3/datatables.min.js" defer></script>
+        <script src="https://kit.fontawesome.com/869e8bf158.js" crossorigin="anonymous" defer></script>
 
     </head>
     <body class="font-sans antialiased">
