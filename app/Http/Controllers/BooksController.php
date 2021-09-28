@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BookRequest;
 use App\Models\Book;
 use App\Models\Writer;
 use Illuminate\Http\Request;
@@ -116,18 +117,11 @@ class BooksController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\BookRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BookRequest $request)
     {
-        $validator = Validator::make($request->all(), [ // começa a validação de campos
-            'title' => 'required',
-            'description' => 'required',
-            'writer' => 'required',
-            'pages' => 'required',
-        ])->validate();
-        
         $book = new Book();
         $book->title = $request->title;
         $book->description = $request->description;
@@ -168,17 +162,11 @@ class BooksController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Book  $book
+     * @param  \App\Models\BookRequest  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Book $book)
+    public function update(BookRequest $request, Book $book)
     {
-        $validator = Validator::make($request->all(), [ // começa a validação de campos
-            'title' => 'required',
-            'description' => 'required',
-            'writer' => 'required',
-            'pages' => 'required',
-        ])->validate();
         
         $book->title = $request->title;
         $book->description = $request->description;
